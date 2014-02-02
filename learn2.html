@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8" />
+		
+		<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="js/knockout-3.0.0.debug.js"></script>
+		<script type="text/javascript" src="js/learn1.js"></script>
+	</head>
+
+	<body>
+		<!-- text binding ********************************************************** -->
+
+		<div id='text-binding'>
+			Value of title is: <span data-bind="text: title">binding doesn't work</span>. <br />
+			<!-- DONT USE <span data-bind="" /> IT'S NOT HTML5'ISH AND SOMETHIMES DOESN'T WORK WITH KO -->
+			You can also bind result of js expression: <span data-bind="text: title.length"></span>. <br />
+			Another example: <span data-bind="text: new Date()"></span>.
+
+			<script type="text/javascript">
+				var viewModel = {
+					title: "This is my title!" // or ko.observalbe("This is my title!")
+				};
+				ko.applyBindings(viewModel, document.getElementById("text-binding"));
+			</script>
+		</div>
+
+		<hr />
+
+		<!-- html binding ********************************************************** -->
+		<div id='html-binding'>
+			<div data-bind="html: formattedText"></div>			
+
+			<script type="text/javascript">
+				var viewModel = {
+					formattedText: ko.observable("<strong>this is important</strong> and this is not.")
+				};
+				ko.applyBindings(viewModel, document.getElementById("html-binding"));
+			</script>
+		</div>
+
+		<hr />
+		
+		<!-- visible binding ********************************************************** -->
+		<div id='visible-binding'>
+			<div data-bind="visible: show">
+				Hidden message.
+			</div>
+			<button type="button" data-bind="click: showMessage">Show</button>
+			<button type="button" data-bind="click: hideMessage">Hide</button>
+			
+			<script type="text/javascript">
+				var viewModel = {
+					show: ko.observable(false),
+					showMessage: function() { viewModel.show(true); },
+					hideMessage: function() { viewModel.show(false); }
+				};
+				ko.applyBindings(viewModel, document.getElementById("visible-binding"));
+			</script>
+		</div>			
+	
+		<hr />
+
+		<!-- css binding ********************************************************** -->
+		<div id='css-binding'>
+			<style type="text/css">
+			.fg { color: purple; }
+			.bg { background-color: #d8da3d; }
+			</style>
+
+			<span data-bind="css: dynamicCss">dynamic binding</span> <br />
+			<span data-bind="css: { fg: foreground, bg: background }">static binding</span> <br />
+
+			<label><input type="checkbox" data-bind="checked: foreground" />Foreground</label> <br />
+			<label><input type="checkbox" data-bind="checked: background" />Background</label> <br />
+
+			<script type="text/javascript">
+				var viewModel = {
+					foreground: ko.observable(false),
+					background: ko.observable(false)
+				};
+
+				viewModel.dynamicCss = ko.computed(function() {
+						var styles = "";
+						if(viewModel.foreground())
+							styles += "fg";
+						if(viewModel.background())
+							styles += " bg";
+						return styles;
+			  });
+
+				ko.applyBindings(viewModel, document.getElementById("css-binding"));
+			</script>
+		</div>
+
+		<hr />
+
+		<!-- attr binding ********************************************************** -->
+		<div id='attr-binding'>
+			<a data-bind="attr: { href: url, title: details }">
+					Report
+			</a>
+			 
+			<script type="text/javascript">
+					var viewModel = {
+						  url: ko.observable("year-end.html"),
+						  details: ko.observable("Report including final year-end statistics")
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("attr-binding"));
+			</script>
+		</div>
+		
+		<!-- see style binding in ko documentation -->
+		<hr />
+
+		<!-- click binding ********************************************************** -->
+		<div id='click-binding'>
+			<button type="button" data-bind="click: showAlert">Click Me!</button>
+			<!-- click binding expects function so we can also write:
+					 click: function() { alert('foo'); }.
+
+					 parameters to called function function(data, event) 
+						- data - binded object (same as $data)
+						- event - js click event.
+					 
+					 see also: clickBubble: false binding. 
+
+					 return true from click handler to run default action associated with click,
+					 by default ko prevents default action from executing.
+				-->
+
+			<button type="button" data-bind="text: text, click: function(data, event) { alert(event.clientX); alert(JSON.stringify(data)); }">Click Me Too!</button>
+			 
+			<script type="text/javascript">
+					var viewModel = {
+							text: "Click me too!",
+						  showAlert: function() { alert('button clicked!'); }
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("click-binding"));
+			</script>
+		</div>
+
+		<!-- See event binding in ko documentation -->
+		
+		<hr />
+		<!-- submit binding ******************************************************** -->	
+		<div id='submit-binding'>
+			<form data-bind="submit: submit">
+				<label>Name: <input type="text" data-bind="value: name" /></label>
+				<button type="submit">Submit</button>
+			</form>
+
+			<script type="text/javascript">
+					var viewModel = {
+							name: ko.observable("")
+					};
+
+					viewModel.submit = function(formElement) {
+						alert("submit from: " + viewModel.name());
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("submit-binding"));
+			</script>
+		</div>
+	
+		<hr />
+		<!-- enable/disable binding ************************************************ -->
+		<div id='enable-binding'>
+			<label>Field A: <input type="text" data-bind="enable: enabled" /></label> <br />
+			<label>Field B: <input type="text" data-bind="disable: !enabled()" /></label> <br />
+
+			<!-- you can use expressions in enable/disable binding value part -->
+
+			<label><input type="checkbox" data-bind="checked: enabled" />Toggle</label> <br />
+
+			<script type="text/javascript">
+					var viewModel = {
+							enabled: ko.observable(true)
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("enable-binding"));
+			</script>
+		</div>
+
+		<hr />
+		<!-- value binding ************************************************ -->
+		<div id='value-binding'>
+			<label>Field A: <input type="text" data-bind="value: name" /></label> <br />
+
+			<!-- important value binding option is valueUpdate which can be:
+						- "keyup" - updates your view model when the user releases a key
+						- "keypress" - updates your view model when the user has typed a key. 
+							Unlike keyup, this updates repeatedly while the user holds a key down.
+						- "afterkeydown" - updates your view model as soon as the user begins typing a character. 
+							This works by catching the browser’s keydown event and handling the event asynchronously.
+
+						usage: value: someValue, valueUpdate: 'afterkeydown' -->
+
+			Field A value: <span data-bind="text: name"></span>.
+			<script type="text/javascript">
+					var viewModel = {
+							name: ko.observable("")
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("value-binding"));
+			</script>
+		</div>
+
+		<hr />
+		<!-- checked binding ************************************************ -->
+		<div id='checked-binding'>
+			<label><input type="checkbox" data-bind="checked: checkSingle" />Toggle</label> <br />
+
+			Options: <br />
+			<label><input type="checkbox" value="A" data-bind="checked: options" />Option A</label> <br />
+			<label><input type="checkbox" value="B" data-bind="checked: options" />Option B</label> <br />
+			<label><input type="checkbox" value="C" data-bind="checked: options" />Option C</label> <br />
+
+			Radios: <br />
+			<label><input type="radio" name="g1" value="A" data-bind="checked: radioOptions" />Option A</label> <br />
+			<label><input type="radio" name="g1" value="B" data-bind="checked: radioOptions" />Option B</label> <br />
+			<label><input type="radio" name="g1" value="C" data-bind="checked: radioOptions" />Option C</label> <br />
+
+			<!-- nice trick to help you debug ko.
+					 other debuging guidlines: http://www.knockmeout.net/2013/06/knockout-debugging-strategies-plugin.html
+		  -->
+			<br />
+			ViewModel:
+			<pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+
+			<script type="text/javascript">
+					var viewModel = {
+							checkSingle: ko.observable(true),
+							options: ko.observableArray(["A","B", "C"]),
+							radioOptions: ko.observable("B")
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("checked-binding"));
+			</script>
+		</div>
+
+		<hr />
+
+		<!-- focus binding ********************************************************* -->
+		<div id='focus-binding'>
+			<input type="text" data-bind="hasFocus: focused" />. <br />
+			Element has focus: <span data-bind="text: focused() ? 'yes' : 'no'"></span>. <br />
+
+			<!-- $root is part of binding context, see also $parent, $parents, $data, $context and $index -->
+			<button type="button" data-bind="click: function() { $root.focused(true); }">Set focus</button> 
+
+			<script type="text/javascript">
+					var viewModel = {
+							focused: ko.observable(false)
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("focus-binding"));
+			</script>
+		</div>
+
+		<!-- options binding ******************************************************* -->
+
+		// TODO: Virtual binding
+	</body>
+
+</html>
