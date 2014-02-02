@@ -152,6 +152,10 @@
 				<button type="submit">Submit</button>
 			</form>
 
+			<!-- k o prevents default submit behavior, return true from handler
+					 to execute default behavior (POST or GET request) -->
+			<!-- be aware of ko after comment -->
+
 			<script type="text/javascript">
 					var viewModel = {
 							name: ko.observable("")
@@ -260,8 +264,50 @@
 			</script>
 		</div>
 
-		<!-- options binding ******************************************************* -->
+		<hr />
 
+		<!-- options binding ******************************************************* -->
+		<div id='options-binding'>
+			Selected string: <select data-bind="options: strings, value: selectedString"></select>
+			<br />
+			Selected string's: <select size="3" multiple="true" data-bind="options: strings, selectedOptions: selectedStrings"></select><br />
+
+			Selected object: <select data-bind="options: objects, optionsText: 'caption', value: selectedObject, optionsCaption: 'select something'"></select>
+			<br />
+			Selected objects: <select size="3" multiple="true" data-bind="options: objects, 
+																																		optionsText: 'caption',
+																																		selectedOptions: selectedObjects"></select><br />
+
+			<!-- optionsText - can be function function(item) { return text-for-item(item); }
+					 you can also use optionsValue: to convert items to values -->
+
+			ViewModel:
+			<pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+
+			<script type="text/javascript">
+					var viewModel = {
+							strings: ko.observableArray(["foo", "bar", "python"]),
+							selectedString: ko.observable("foo"),
+							selectedStrings: ko.observable(["foo"]),
+
+							objects: ko.observableArray([ 
+								{ caption: 'Foo', value: 1 },
+								{ caption: 'Bar', value: 2 },
+								{ caption: 'Python', value: 3 }
+							]),
+							selectedObject: ko.observable(),
+							selectedObjects: ko.observableArray([])
+					};
+
+					ko.applyBindings(viewModel, document.getElementById("options-binding"));
+			</script>
+		</div>
+
+		<!-- check uniqueName binding in ko documentation - it allows to give unique id to html elements -->
+		<hr />
+
+		// TODO: Control flow
+		// TODO: Template
 		// TODO: Virtual binding
 	</body>
 
