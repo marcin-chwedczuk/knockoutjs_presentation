@@ -1,3 +1,10 @@
+// JS module:
+// window.moduleName = {};
+// (function (moduleName) {
+// 		moduleName.foo = 3;
+//		other stuff...
+//	})(window.moduleName);
+//
 
 window.learn1App = { };
 
@@ -33,6 +40,32 @@ window.learn1App = { };
 	}
 	learn1App.MySubscribable = MySubscribable;
 	
+	function Observable() {
+		var self = this;
+
+		self.someProperty = ko.observable();
+		// someProperty value is 'undefined'
+
+		self.otherProperty = ko.observable(1);
+		// otherProperty value is 1
+
+		self.demo = function() {
+			// subscribe for change
+			self.someProperty.subscribe(function(newValue) {
+				console.log("SUBSCRIPTION HANDLER: someProperty new value: ", newValue);			
+			});
+	
+			console.log("before set value");
+			// set observable value
+			self.someProperty("foo");
+			console.log("after set value");
+			
+			// get observable value
+			var value = self.someProperty(); 
+			console.log("someProperty value: ", value);
+		};
+	}
+	learn1App.Observable = Observable;
 
 	function ObservableArray() {
 		var self = this;
@@ -59,6 +92,47 @@ window.learn1App = { };
 		};
 	}
 	learn1App.ObservableArray = ObservableArray;
+
+	function ComputedObservables(firstName, lastName) {
+		var self = this;
+
+		self.firstName = ko.observable(firstName);
+		self.lastName = ko.observable(lastName);
+
+		self.fullName = ko.computed(function() {
+			// KNOCKOUT for EVERY UPDATE computes observable dependencies.
+			// IT IS RECOMMENDED TO USE ALL DEPENDENT OBSERVABLES AT THE
+			// BEGINING OF COMPUTED OBSERVABLE FUNCTION
+			var first = self.firstName();
+			var last = self.lastName();
+
+			// you can use observable.peek() when you don't want to create dependency
+
+			// then we can place logic that decides if we need to use
+			// all values from other observables.
+			
+			return first + " " + last;
+		});
+
+		self.demo = function() {
+			self.fullName.subscribe(function(newFullName) {
+				console.info("computed observable changed to: %s.", newFullName);
+			});
+
+			self.firstName("marcin");
+			self.firstName("anna");
+			
+			// computable is updated only one for all bolek calls
+			self.firstName("bolek");
+			self.firstName("bolek");
+			self.firstName("bolek");
+			
+			// if we has use object instead of string computable would have been
+			// updated 3 times.
+			// we can change this behavior using custom equalityComparer function.
+		};
+	}
+	learn1App.ComputedObservables = ComputedObservables;
 
 	function ExtendingObservable() {
 		var self = this;
@@ -108,45 +182,6 @@ window.learn1App = { };
 	}
 	learn1App.ExtendingObservable = ExtendingObservable;
 
-	function ComputedObservables(firstName, lastName) {
-		var self = this;
-
-		self.firstName = ko.observable(firstName);
-		self.lastName = ko.observable(lastName);
-
-		self.fullName = ko.computed(function() {
-			// KNOCKOUT for EVERY UPDATE computes observable dependencies.
-			// IT IS RECOMMENDED TO USE ALL DEPENDENT OBSERVABLES AT THE
-			// BEGINING OF COMPUTED OBSERVABLE FUNCTION
-			var first = self.firstName();
-			var last = self.lastName();
-
-			// then we can place logic that decides if we need to use
-			// all values from other observables.
-			
-			return first + " " + last;
-		});
-
-		self.demo = function() {
-			self.fullName.subscribe(function(newFullName) {
-				console.info("computed observable changed to: %s.", newFullName);
-			});
-
-			self.firstName("marcin");
-			self.firstName("anna");
-			
-			// computable is updated only one for all bolek calls
-			self.firstName("bolek");
-			self.firstName("bolek");
-			self.firstName("bolek");
-			
-			// if we has use object instead of string computable would have been
-			// updated 3 times.
-			// we can change this behavior using custom equalityComparer function.
-		};
-	}
-	learn1App.ComputedObservables = ComputedObservables;
-
 	function EqualityComparer() {
 		var self = this;
 
@@ -177,6 +212,9 @@ window.learn1App = { };
 
 			// DONT OVERUSE COMPUTED OBSERVABLES WITH DEFAULT EQ COMPARER
 			// THIS CAN LEAD TO LONG UPDATE CALL CHAINS AND SLOW PERFORMANCE
+
+			// When you always want to receive notifications (if property value
+			// changed or not) use .extend({ notify: 'always' }) on observable.
 		};
 	};
 	learn1App.EqualityComparer = EqualityComparer;
@@ -189,7 +227,7 @@ window.learn1App = { };
 			read: function() { return _count(); },
 			write: function(value) {
 				if(value < 0)
-					throw Error("value cannot be less than 0");
+					throw new Error("value cannot be less than 0");
 				_count(value);
 			}
 		});
@@ -213,6 +251,11 @@ window.learn1App = { };
 	};
 	learn1App.ComputedAsProtection = ComputedAsProtection;
 
+	// COMPUTED OBSERVABLES ARE REALLY COMPLEX
+	// AND CAN BE USED IN VARIOUS SITUATIONS
+	// E.G. SEE THROTLING EXTENDER AND DEFFER EVALUATION IN
+	// KO DOCS.
+
 	function KnockoutUtils() {
 		var self = this;
 
@@ -233,7 +276,7 @@ window.learn1App = { };
 			var _ko = ko.utils.unwrapObservable(self.koValue);
 			var js = ko.utils.unwrapObservable(self.jsValue);
 
-			// in newer version of knockout we can use
+			// in newer version of knockout (3+) we can use
 			// ko.unwrap(object)
 
 			console.info("ko = %d, js = %d", _ko, js);
@@ -252,8 +295,7 @@ window.learn1App = { };
 			demoArray = ko.utils.arrayFilter(demoArray, function(i) { return (i>9); });
 			console.info(demoArray);
 
-			// and many more..., you can play with all functions using chrome 
-			// js console
+			// and many more...
 		};
 
 		self.printSeparator = function() {

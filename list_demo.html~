@@ -6,12 +6,15 @@
 	</head>
 
 	<body>
+		<!-- pole do edycji: -->
 		<div id="add-book" data-bind="with: current">
-			<label>Title: <input type="text" data-bind="value: title" /></label> <br />
-			<label>Price: <input type="text" data-bind="value: price" /></label> <br />
+			<label>Title: <input type="text" data-bind="value: title, valueUpdate: 'afterkeydown'" /></label> <br />
+			<label>Price: <input type="text" data-bind="value: price, valueUpdate: 'afterkeydown'" /></label> <br />
 		</div>
 	  <button type="button" data-bind="click: add">ADD BOOK</button>
 		<hr />
+
+		<!-- lista obiektów -->
 		<div id="book-list">
 			<table>	
 				<thead>
@@ -60,7 +63,7 @@
 
 					self.books.remove(book);
 					if(self.current() === book)
-						self.current(self.books().length ? self.books()[0] : null);
+						self.current(self.books.length ? self.books()[0] : null);
 				};
 			}
 
