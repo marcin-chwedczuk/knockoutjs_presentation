@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8" />
+		
+		<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="js/knockout-3.0.0.debug.js"></script>
+		<script type="text/javascript" src="js/learn1.js"></script>
+	</head>
+
+	<body>
+		<p>Hello world!</p>
+
+		<br />
+		some option: <span data-bind="text: yn"></span> <br />
+		<label><input type="checkbox" data-bind="yesNo: yn" /> some option</label>
+		<br />
+
+		<script type="text/javascript">
+			var app = new learn1App.App();
+			app.run();
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='pl'>
+	<head>
+		<title>Knockout.js application</title>
+		<meta charset='utf-8' />
+		<script type='text/javascript' src='js/jquery-1.4.2.min.js'></script>
+		<script type='text/javascript' src='js/knockout-3.0.0.debug.js'></script>
+		<style type='text/css'>
+		</style>
+	</head>
+	<body>
+
+	<div id="content">
+		<div id="productView" data-bind="with: selectedProduct">
+		<form>
+			<fieldset>
+				<legend>Product Details</legend>
+				<label>
+					SKU: <input type="text" data-bind="value: sku" />
+				</label>
+				<br />
+				<label>
+					Description: <input type="text" data-bind="value: description" />
+				</label>
+				<br />
+				<label>
+					Cost: <input type="text" data-bind="value: cost" />$
+				</label>
+				<br />
+				<label>
+					Price: <input type="text" data-bind="value: price" />$
+				</label>
+				<br />
+				<label>
+					Quantity: <input type="text" data-bind="value: quantity" />
+				</label>
+			</fieldset>
+		</form>
+		</div>
+	</div>
+
+	<div id="buttonContainer">
+		<button type="button" data-bind="click: addNewProduct">ADD</button>
+		<button type="button" data-bind="click: doneEditingProduct, 
+										 visible: isProductSelected">SAVE</button>
+		<button type="button" data-bind="click: removeProduct,
+										 visible: isProductSelected">REMOVE</button>
+	</div>
+	
+	<div id="productListView">
+		<select id="productList"
+				style="min-width: 120px;"
+				data-bind="options: productCollection,
+						   value: listViewSelectedProduct,
+						   optionsText: 'sku'"	
+	</div>
+	
+		<!-- load js after all DOM -->
+		<script type='text/javascript' src='js/my-app.js'></script>
+		<script type='text/javascript'>
+			var app = new myApp.App();
+			app.run();
+		</script>
+	</body>
+</html>

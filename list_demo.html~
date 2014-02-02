@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>Knockout list demo</title>
+
+		<script type="text/javascript" src="js/knockout-3.0.0.debug.js"></script>
+	</head>
+
+	<body>
+		<div id="add-book" data-bind="with: current">
+			<label>Title: <input type="text" data-bind="value: title" /></label> <br />
+			<label>Price: <input type="text" data-bind="value: price" /></label> <br />
+		</div>
+	  <button type="button" data-bind="click: add">ADD BOOK</button>
+		<hr />
+		<div id="book-list">
+			<table>	
+				<thead>
+					<tr>
+						<th>Book Title</th><th>Book Price</th><th>Actions</th>
+					</tr>
+				</thead>
+				<tbody data-bind="template: { name: 'book-template', foreach: books }">
+				</tbody>
+			</table>
+		</div>
+
+		<script type="text/html" id="book-template">
+			<tr>
+				<td data-bind="text: title" />
+				<td data-bind="text: price" />
+				<td>
+					<button type="button" data-bind="click: $parent.remove">DELETE</button>
+					<button type="button" data-bind="click: $parent.current">EDIT</button>
+				</td>
+			</tr>
+		</script>
+
+		<script type="text/javascript">
+			function BookModel() {
+				var self = this;
+
+				self.title = ko.observable("");
+				self.price = ko.observable(0.0);
+			}
+
+			function BookListViewModel() {
+				var self = this;
+
+				self.current = ko.observable(null);
+				self.books = ko.observableArray([]);
+
+				self.add = function() {
+					var book = new BookModel();
+					self.books.push(book);
+					self.current(book);
+				};
+
+				self.remove = function(book) {
+					if(!book) return;
+
+					self.books.remove(book);
+					if(self.current() === book)
+						self.current(self.books().length ? self.books()[0] : null);
+				};
+			}
+
+			var viewModel = new BookListViewModel();
+			ko.applyBindings(viewModel);
+		</script>
+	</body>
+</html>
