@@ -18,10 +18,10 @@
 			Another example: <span data-bind="text: new Date()"></span>.
 
 			<script type="text/javascript">
-				var viewModel = {
+				var viewModel1 = {
 					title: "This is my title!" // or ko.observalbe("This is my title!")
 				};
-				ko.applyBindings(viewModel, document.getElementById("text-binding"));
+				ko.applyBindings(viewModel1, document.getElementById("text-binding"));
 			</script>
 		</div>
 
@@ -32,10 +32,10 @@
 			<div data-bind="html: formattedText"></div>			
 
 			<script type="text/javascript">
-				var viewModel = {
+				var viewModel2 = {
 					formattedText: ko.observable("<strong>this is important</strong> and this is not.")
 				};
-				ko.applyBindings(viewModel, document.getElementById("html-binding"));
+				ko.applyBindings(viewModel2, document.getElementById("html-binding"));
 			</script>
 		</div>
 
@@ -50,12 +50,14 @@
 			<button type="button" data-bind="click: hideMessage">Hide</button>
 			
 			<script type="text/javascript">
-				var viewModel = {
-					show: ko.observable(false),
-					showMessage: function() { viewModel.show(true); },
-					hideMessage: function() { viewModel.show(false); }
+				var viewModel3 = {
+					show: ko.observable(false)
 				};
-				ko.applyBindings(viewModel, document.getElementById("visible-binding"));
+
+				viewModel3.showMessage = function() { viewModel3.show(true); };
+				viewModel3.hideMessage = function() { viewModel3.show(false); };
+
+				ko.applyBindings(viewModel3, document.getElementById("visible-binding"));
 			</script>
 		</div>			
 	
@@ -75,21 +77,21 @@
 			<label><input type="checkbox" data-bind="checked: background" />Background</label> <br />
 
 			<script type="text/javascript">
-				var viewModel = {
+				var viewModel4 = {
 					foreground: ko.observable(false),
 					background: ko.observable(false)
 				};
 
-				viewModel.dynamicCss = ko.computed(function() {
+				viewModel4.dynamicCss = ko.computed(function() {
 						var styles = "";
-						if(viewModel.foreground())
+						if(viewModel4.foreground())
 							styles += "fg";
-						if(viewModel.background())
+						if(viewModel4.background())
 							styles += " bg";
 						return styles;
 			  });
 
-				ko.applyBindings(viewModel, document.getElementById("css-binding"));
+				ko.applyBindings(viewModel4, document.getElementById("css-binding"));
 			</script>
 		</div>
 
@@ -102,12 +104,12 @@
 			</a>
 			 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel5 = {
 						  url: ko.observable("year-end.html"),
 						  details: ko.observable("Report including final year-end statistics")
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("attr-binding"));
+					ko.applyBindings(viewModel5, document.getElementById("attr-binding"));
 			</script>
 		</div>
 		
@@ -133,12 +135,12 @@
 			<button type="button" data-bind="text: text, click: function(data, event) { alert(event.clientX); alert(JSON.stringify(data)); }">Click Me Too!</button>
 			 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel6 = {
 							text: "Click me too!",
 						  showAlert: function() { alert('button clicked!'); }
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("click-binding"));
+					ko.applyBindings(viewModel6, document.getElementById("click-binding"));
 			</script>
 		</div>
 
@@ -152,20 +154,20 @@
 				<button type="submit">Submit</button>
 			</form>
 
-			<!-- k o prevents default submit behavior, return true from handler
+			<!-- k_o prevents default submit behavior, return true from handler
 					 to execute default behavior (POST or GET request) -->
 			<!-- be aware of ko after comment -->
 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel7 = {
 							name: ko.observable("")
 					};
 
-					viewModel.submit = function(formElement) {
-						alert("submit from: " + viewModel.name());
+					viewModel7.submit = function(formElement) {
+						alert("submit from: " + viewModel7.name());
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("submit-binding"));
+					ko.applyBindings(viewModel7, document.getElementById("submit-binding"));
 			</script>
 		</div>
 	
@@ -180,11 +182,11 @@
 			<label><input type="checkbox" data-bind="checked: enabled" />Toggle</label> <br />
 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel8 = {
 							enabled: ko.observable(true)
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("enable-binding"));
+					ko.applyBindings(viewModel8, document.getElementById("enable-binding"));
 			</script>
 		</div>
 
@@ -204,11 +206,11 @@
 
 			Field A value: <span data-bind="text: name"></span>.
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel9 = {
 							name: ko.observable("")
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("value-binding"));
+					ko.applyBindings(viewModel9, document.getElementById("value-binding"));
 			</script>
 		</div>
 
@@ -235,13 +237,13 @@
 			<pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel10 = {
 							checkSingle: ko.observable(true),
 							options: ko.observableArray(["A","B", "C"]),
 							radioOptions: ko.observable("B")
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("checked-binding"));
+					ko.applyBindings(viewModel10, document.getElementById("checked-binding"));
 			</script>
 		</div>
 
@@ -256,11 +258,11 @@
 			<button type="button" data-bind="click: function() { $root.focused(true); }">Set focus</button> 
 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel11 = {
 							focused: ko.observable(false)
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("focus-binding"));
+					ko.applyBindings(viewModel11, document.getElementById("focus-binding"));
 			</script>
 		</div>
 
@@ -285,7 +287,7 @@
 			<pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
 
 			<script type="text/javascript">
-					var viewModel = {
+					var viewModel12 = {
 							strings: ko.observableArray(["foo", "bar", "python"]),
 							selectedString: ko.observable("foo"),
 							selectedStrings: ko.observable(["foo"]),
@@ -299,16 +301,199 @@
 							selectedObjects: ko.observableArray([])
 					};
 
-					ko.applyBindings(viewModel, document.getElementById("options-binding"));
+					ko.applyBindings(viewModel12, document.getElementById("options-binding"));
 			</script>
 		</div>
 
 		<!-- check uniqueName binding in ko documentation - it allows to give unique id to html elements -->
 		<hr />
 
-		// TODO: Control flow
-		// TODO: Template
-		// TODO: Virtual binding
+		<!-- CONTROL FLOW BINDINGS -->
+
+		<!-- if binding ************************************************************ -->
+
+		<div id='if-binding'>
+			Basic info: <br />			
+			Name: <span data-bind="text: name"></span>. <br />			
+
+			Additional info: <br />
+			<div data-bind="if: infoex">
+				Email: <span data-bind="text: infoex().email"></span>. <br />
+			</div> 
+			<div data-bind="ifnot: infoex">
+				No additional info provided.
+			</div>
+
+			<button type="button" data-bind="click: setInfoEx">Set Additional Info</button>
+			<button type="button" data-bind="click: clearInfoEx">Clear Additional Info</button>
+
+			<!-- bindings are case sensitive ifnot != ifNot -->
+
+			<script type="text/javascript">
+					var viewModelIf = {
+							name: ko.observable("mike"),
+							infoex: ko.observable()
+					};
+
+					viewModelIf.setInfoEx = function() {
+						viewModelIf.infoex({ email: "mike@foo.bar" });
+					};
+
+					viewModelIf.clearInfoEx = function() {
+						viewModelIf.infoex(null);
+					};
+
+					ko.applyBindings(viewModelIf, document.getElementById("if-binding"));
+			</script>
+		</div>
+
+		<hr />
+
+		<!-- with binding ********************************************************** -->
+
+		<div id="with-binding">
+			<span data-bind="with: from">
+				Line start point: (<span data-bind="text: X"></span>, <span data-bind="text: Y"></span>).
+			</span>
+			<br />
+			<span data-bind="with: to">
+				Line end point: (<span data-bind="text: X"></span>, <span data-bind="text: Y"></span>).
+			</span>
+			<br />
+
+			<!-- without with: we would be forced to write something like this:
+						<span data-bind="text: from.X"></span>
+				-->
+
+			<script type="text/javascript">
+				var LineViewModel = function() {
+					var self = this;
+
+					self.from = {
+						X: ko.observable(3),
+						Y: ko.observable(7)
+					};
+
+					self.to = {
+						X: ko.observable(10),
+						Y: ko.observable(12)
+					};
+				};
+
+				ko.applyBindings(new LineViewModel(), document.getElementById("with-binding"));
+			</script>
+		</div>
+
+		<hr />
+		<!-- foreach binding ******************************************************* -->
+
+		<div id="foreach-binding">
+			Simple foreach binding: <br />
+			<button data-bind="click: addItem">Add item</button>
+			<br />
+			<div data-bind="foreach: items">
+				<span data-bind="text: $index"></span>. <span data-bind="text: $data"></span> <br />
+			</div>
+
+			Advanced binding: <br />
+			<div data-bind="foreach: { data: orders, as: 'order' }">
+				Orders for: <span data-bind="text: userName"></span>.
+				<ul data-bind="foreach: items">
+					<li><span data-bind="text: description"></span> (<span data-bind="text: price"></span>)</li>
+				</ul>
+			</div>
+
+			<!-- foreach binding has good support for animations, 
+					fancy example + more info at: http://knockoutjs.com/examples/animatedTransitions.html -->
+
+			<script type="text/javascript">
+				var OrderLine = function(description, price) {
+					var self = this;
+					
+					self.description = description;
+					self.price = price;
+				};				
+
+				var Order = function(userName, items) {
+					var self = this;
+
+					self.userName = userName;
+					self.items = items;
+				};
+
+				var ForeachViewModel = function() {
+					var self = this;
+
+					self.items = ko.observableArray([]);
+					self.addItem = function() {
+						self.items.push("New item (created at: " + new Date().toString() + ")");	
+					};
+					
+					self.orders = ko.observableArray([
+						new Order("mc", [
+							new OrderLine("bumerang", "33PLN"),
+							new OrderLine("artifact", "3$"),
+							new OrderLine("pizza", "12$")						
+						]),
+						new Order("geek", [
+							new OrderLine("github stickers", "4$"),
+							new OrderLine("kernel hacking guide", "100$")
+						])
+					]);
+
+				};			
+
+				ko.applyBindings(new ForeachViewModel(), document.getElementById("foreach-binding"));
+			</script>
+		</div>
+	
+		<hr />
+
+		<!-- TEMPLATE BINDING -->
+
+		<script type="text/html" id="templDemo">
+			<li>Name: <span data-bind="text: name"></span> ($<span data-bind="text: price"></span>)</li>
+		</script>
+
+		<div id='template-binding'>
+			Single item:
+			<ul data-bind="template: { name: 'templDemo', data: singleItem }">
+			</ul>
+
+			Multiple items:
+			<ul data-bind="template: { name: 'templDemo', foreach: itemArray, as: 'item' }">
+			</ul>
+
+			<script type="text/javascript">
+				function RowItem(name, price) {
+					var self = this;
+
+					self.name = ko.observable(name);
+					self.price = ko.observable(price);
+				}			
+				
+				function TemplateViewModel() {
+					var self = this;
+
+					self.singleItem = new RowItem("single", 100);
+					self.itemArray = ko.observableArray([
+						new RowItem("foo", 10),
+						new RowItem("bar", 20),
+						new RowItem("yay", 100)
+					]);
+				}
+
+				ko.applyBindings(new TemplateViewModel(), document.getElementById("template-binding"));
+			</script>
+		</div>
+
+		<!-- template binding also allows you to independly select template
+					for each array item. Simply pass function name as name: binding parameter.
+					Function should take two arguments (data, bindingContext) 
+						data - is element for which we select template.
+					Function should return name of template to use, more info in ko docs. -->
+
+		<!-- VIRTUAL BINDING (CONTAINERLESS BINDING) -->
 	</body>
 
 </html>
